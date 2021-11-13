@@ -1,0 +1,151 @@
+---
+title: "Casino"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+    theme: spacelab
+    vertical_layout: scroll
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+if (!require(pacman)) {install.packages("pacman")
+  library(pacman)}
+pacman::p_load("flexdashboard","ggplot2","plotly","shiny","plyr","dplyr","plotly","tm","crosstalk","readxl","crosstalk", "readxl")
+```
+
+```{r}
+# file.choose()
+DATA = read_excel("D:/3-1 Rshiny/teamplay/casino/casino/sales3.xlsx")
+DATA2 = read_excel("D:/3-1 Rshiny/teamplay/casino/casino/sales.xlsx")
+```
+
+```{r}
+Sales_Year = DATA2$Year
+Sales_1 = DATA2$`카지노 매출액`
+Sales_2 = DATA2$`외국인 전용 카지노`
+Sales_3 = DATA2$강원랜드
+Visit_Year = DATA2$Year2
+VIsit_Total = DATA2$`전국(명)`
+```
+
+
+
+EDA
+==========================
+Column {.sidebar}
+--------------------------
+<!-- Data Select -->
+
+<br>
+
+```{r}
+date()
+```
+
+```
+Learnit Job Class    
+Description :
+
+1. 대시보드 만들기      
+2. 새로운 평가지표 만들어보기    
+3. 그래프 이쁘게 그려보기    
+4. 유지보수 잘하기   
+```
+
+
+column
+------------------------
+### head
+```{r}
+head(DATA)
+```
+
+Row 
+--------------------------------
+### name
+```{r}
+names(DATA)
+```
+
+Row 
+--------------------------------
+### dim
+```{r}
+dim(DATA)
+```
+
+<br>
+
+카지노 방문객 수
+==========================
+column
+--------------------------
+<!-- Data Select -->
+
+```{r}
+
+# generally speaking, use a "unique" key for filter, 
+# especially when you have multiple filters!
+#DATA = read_excel("C:/Users/Song/Desktop/sales3.xlsx")
+tx <- highlight_key(DATA)
+gg <- ggplot(tx) + geom_line(aes(year, median, group = city, color = city))
+
+filter <- bscols(
+  filter_select("id", "Select a city", tx, ~city),
+  ggplotly(gg, dynamicTicks = TRUE),
+  widths = c(12, 12)
+)
+
+tx2 <- highlight_key(DATA, ~city, "Select a city")
+gg <- ggplot(tx2) + geom_line(aes(year, median, group = city, color = city))
+
+select <- highlight(
+  ggplotly(gg, tooltip = "city"), 
+  selectize = TRUE, persistent = TRUE
+)
+
+bscols(filter, select)
+```
+
+<p>
+
+Row 
+------------------------ 
+### 전체 방문객
+```{r}
+ppp = ggplot(DATA2) +
+  geom_area(aes(x=Visit_Year,y=VIsit_Total), group = 1, fill = "lightblue") +
+  xlab("년도") + ylab("방문객 수(명)")
+ ggplotly(ppp)
+```
+
+<br>
+
+매출액
+==========================
+
+Row
+------------------------ 
+### 카지노 매출액
+
+```{r}
+p = ggplot(DATA2) +
+  geom_line(aes(x=Sales_Year,y=Sales_1),group = 1 , col ='red') +
+  xlab("년도") + ylab("금액(조원)")
+ ggplotly(p)
+
+```
+
+### 외전 카지노 매출액 비중 추이
+
+```{r}
+renderPlotly({
+pp = ggplot(DATA2) +
+  geom_line(aes(x=Sales_Year,y=Sales_2),group = 1 , col ='red') +
+  geom_line(aes(x=Sales_Year,y=Sales_3),group = 1 , col ='black') +
+  xlab("년도") + ylab("매출액 비율(%)")
+ ggplotly(pp)
+})
+```
