@@ -13,22 +13,13 @@ if (!require(pacman)) {install.packages("pacman")
   library(pacman)}
 pacman::p_load("flexdashboard","ggplot2","plotly","shiny","plyr","dplyr",
                "plotly","tm", "crosstalk","readxl","crosstalk", "readxl", "rnaturalearth", "wbstats", "leaflet", "DT", "knitr","shiny","RColorBrewer")
-install.packages('rsconnect')
-```
-
-```{r}
-rsconnect::setAccountInfo(name='yukgeon98527',
-			  token='9ED5829B6F025978C75A9EC3DE532CAF',
-			  secret='rkuYxesnflm1HJ6rriu2wGVo2w8WOUNNv11FYHBm')
-library(rsconnect)
-rsconnect::deployApp('path/to/your/app')
 ```
 
 ```{r include=FALSE}
 # file.choose()
-DATA3 = read_excel("D:/3-1 Rshiny/teamplay/final/sales4.xlsx")
-DATA2 = read_excel("D:/3-1 Rshiny/teamplay/final/sales.xlsx")
-DATA = read_excel("D:/3-1 Rshiny/teamplay/final/test1129.xlsx")
+DATA3 = read_excel("C:/Users/Geon Yuk/Desktop/3-1 Rshiny/teamplay/final/sales4.xlsx")
+DATA2 = read_excel("C:/Users/Geon Yuk/Desktop/3-1 Rshiny/teamplay/final/sales.xlsx")
+DATA = read_excel("C:/Users/Geon Yuk/Desktop/3-1 Rshiny/teamplay/final/test1129.xlsx")
 ```
 
 ```{r include=FALSE}
